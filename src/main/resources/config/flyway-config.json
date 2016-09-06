@@ -1,0 +1,5 @@
+{
+  "encoding": "UTF-8",
+  "locations": "../resources/migrations",
+  "table": "flyway-topic"
+}
