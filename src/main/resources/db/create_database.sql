@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     28.08.2016 17:20:08                          */
+/* Created on:     12.10.2016 21:24:49                          */
 /*==============================================================*/
 
 
@@ -10,11 +10,11 @@ drop table Author;
 
 drop table AuthorBook;
 
-drop index Book_Genre_Relationship_FK;
-
 drop index Book_PK;
 
 drop table Book;
+
+drop table BookGenre;
 
 drop index Genre_PK;
 
@@ -56,8 +56,9 @@ AuthorId
 /* Table: AuthorBook                                            */
 /*==============================================================*/
 create table AuthorBook (
-   AuthorId             INT4                 null,
-   BookId               INT4                 null
+   AuthorId             INT4                 not null,
+   BookId               INT4                 not null,
+   constraint PK_AUTHORBOOK primary key (AuthorId, BookId)
 );
 
 /*==============================================================*/
@@ -65,9 +66,8 @@ create table AuthorBook (
 /*==============================================================*/
 create table Book (
    BookId               SERIAL               not null,
-   GenreId              INT4                 null,
    BookName             VARCHAR(1024)        not null,
-   BookISBN             NUMERIC(13)          not null,
+   BookISBN             VARCHAR(25)          not null,
    BookPagesNumber      NUMERIC(5)           null,
    constraint PK_BOOK primary key (BookId)
 );
@@ -80,10 +80,12 @@ BookId
 );
 
 /*==============================================================*/
-/* Index: Book_Genre_Relationship_FK                            */
+/* Table: BookGenre                                             */
 /*==============================================================*/
-create  index Book_Genre_Relationship_FK on Book (
-GenreId
+create table BookGenre (
+   GenreId              INT4                 not null,
+   BookId               INT4                 not null,
+   constraint PK_BOOKGENRE primary key (GenreId, BookId)
 );
 
 /*==============================================================*/
@@ -189,9 +191,14 @@ alter table AuthorBook
       references Book (BookId)
       on delete restrict on update restrict;
 
-alter table Book
-   add constraint FK_BOOK_BOOK_GENR_GENRE foreign key (GenreId)
+alter table BookGenre
+   add constraint FK_BOOKGENR_REFERENCE_GENRE foreign key (GenreId)
       references Genre (GenreId)
+      on delete restrict on update restrict;
+
+alter table BookGenre
+   add constraint FK_BOOKGENR_REFERENCE_BOOK foreign key (BookId)
+      references Book (BookId)
       on delete restrict on update restrict;
 
 alter table Role
