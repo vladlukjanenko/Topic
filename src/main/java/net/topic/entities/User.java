@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author Vlad Lukjanenko.
  */
 @Entity
-@Table
+@Table(name = "User")
 @NamedQueries({
 
 })

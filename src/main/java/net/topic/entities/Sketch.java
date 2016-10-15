@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author Vlad Lukjanenko.
  */
 @Entity
-@Table
+@Table(name = "Sketch")
 @NamedQueries({
 
 })
