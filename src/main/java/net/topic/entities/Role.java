@@ -8,11 +8,17 @@ import java.util.Objects;
  * @author Vlad Lukjanenko.
  */
 @Entity
-@Table(name = "Role")
+@Table(name = "AccountRole")
 @NamedQueries({
 
 })
 public class Role implements Serializable {
+
+    /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = 8032189404291653807L;
+
 
     /**
      * Unique id.
@@ -23,7 +29,7 @@ public class Role implements Serializable {
     private long roleId;
 
     /**
-     * User name.
+     * Account name.
      * */
     @Column
     private String username;
@@ -35,11 +41,11 @@ public class Role implements Serializable {
     private String roleName;
 
     /**
-     * Many to one relationship mapping: Role - User.
+     * Many to one relationship mapping: Role - Account.
      * */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserId")
-    private User user;
+    @JoinColumn(name = "AccountId")
+    private Account account;
 
 
     /**
@@ -74,14 +80,13 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
-
 
     @Override
     public boolean equals(Object o) {

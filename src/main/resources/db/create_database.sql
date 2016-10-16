@@ -1,8 +1,14 @@
 /*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     12.10.2016 21:24:49                          */
+/* Created on:     16.10.2016 12:44:42                          */
 /*==============================================================*/
 
+
+drop index Account_PK;
+
+drop table Account;
+
+drop table AccountRole;
 
 drop index Author_PK;
 
@@ -20,8 +26,6 @@ drop index Genre_PK;
 
 drop table Genre;
 
-drop table Role;
-
 drop index Shelf_PK;
 
 drop table Shelf;
@@ -30,11 +34,38 @@ drop index Sketch_PK;
 
 drop table Sketch;
 
-drop index User_PK;
-
-drop table "User";
-
 drop table persistent_logins;
+
+/*==============================================================*/
+/* Table: Account                                               */
+/*==============================================================*/
+create table Account (
+   AccountId            SERIAL               not null,
+   UserName             VARCHAR(512)         not null,
+   UserGender           VARCHAR(10)          not null,
+   UserEmail            VARCHAR(128)         not null,
+   UserPhoto            VARCHAR(128)         null,
+   IsAuthor             BOOL                 null,
+   constraint PK_ACCOUNT primary key (AccountId)
+);
+
+/*==============================================================*/
+/* Index: Account_PK                                            */
+/*==============================================================*/
+create unique index Account_PK on Account (
+AccountId
+);
+
+/*==============================================================*/
+/* Table: AccountRole                                           */
+/*==============================================================*/
+create table AccountRole (
+   RoleId               SERIAL               not null,
+   AccountId            INT4                 null,
+   Username             VARCHAR(512)         not null,
+   RoleName             VARCHAR(50)          not null,
+   constraint PK_ACCOUNTROLE primary key (RoleId)
+);
 
 /*==============================================================*/
 /* Table: Author                                                */
@@ -105,23 +136,12 @@ GenreId
 );
 
 /*==============================================================*/
-/* Table: Role                                                  */
-/*==============================================================*/
-create table Role (
-   RoleId               SERIAL               not null,
-   UserId               INT4                 null,
-   Username             VARCHAR(512)         not null,
-   RoleName             VARCHAR(50)          not null,
-   constraint PK_ROLE primary key (RoleId)
-);
-
-/*==============================================================*/
 /* Table: Shelf                                                 */
 /*==============================================================*/
 create table Shelf (
    ShelfId              SERIAL               not null,
-   UserId               INT4                 null,
    BookId               INT4                 null,
+   AccountId            INT4                 null,
    ShelfName            VARCHAR(512)         not null,
    constraint PK_SHELF primary key (ShelfId)
 );
@@ -138,8 +158,8 @@ ShelfId
 /*==============================================================*/
 create table Sketch (
    SketchId             SERIAL               not null,
-   UserId               INT4                 null,
    GenreId              INT4                 null,
+   AccountId            INT4                 null,
    constraint PK_SKETCH primary key (SketchId)
 );
 
@@ -148,26 +168,6 @@ create table Sketch (
 /*==============================================================*/
 create unique index Sketch_PK on Sketch (
 SketchId
-);
-
-/*==============================================================*/
-/* Table: "User"                                                */
-/*==============================================================*/
-create table "User" (
-   UserId               SERIAL               not null,
-   UserName             VARCHAR(512)         not null,
-   UserGender           VARCHAR(10)          not null,
-   UserEmail            VARCHAR(128)         not null,
-   UserPhoto            VARCHAR(128)         null,
-   IsAuthor             BOOL                 null,
-   constraint PK_USER primary key (UserId)
-);
-
-/*==============================================================*/
-/* Index: User_PK                                               */
-/*==============================================================*/
-create unique index User_PK on "User" (
-UserId
 );
 
 /*==============================================================*/
@@ -180,6 +180,11 @@ create table persistent_logins (
    last_used            TIMESTAMP            not null,
    constraint PK_PERSISTENT_LOGINS primary key (series)
 );
+
+alter table AccountRole
+   add constraint FK_ACCOUNTR_REFERENCE_ACCOUNT foreign key (AccountId)
+      references Account (AccountId)
+      on delete restrict on update restrict;
 
 alter table AuthorBook
    add constraint FK_AUTHORBO_REFERENCE_AUTHOR foreign key (AuthorId)
@@ -201,14 +206,9 @@ alter table BookGenre
       references Book (BookId)
       on delete restrict on update restrict;
 
-alter table Role
-   add constraint FK_ROLE_REFERENCE_USER foreign key (UserId)
-      references "User" (UserId)
-      on delete restrict on update restrict;
-
 alter table Shelf
-   add constraint FK_SHELF_REFERENCE_USER foreign key (UserId)
-      references "User" (UserId)
+   add constraint FK_SHELF_REFERENCE_ACCOUNT foreign key (AccountId)
+      references Account (AccountId)
       on delete restrict on update restrict;
 
 alter table Shelf
@@ -217,8 +217,8 @@ alter table Shelf
       on delete restrict on update restrict;
 
 alter table Sketch
-   add constraint FK_SKETCH_REFERENCE_USER foreign key (UserId)
-      references "User" (UserId)
+   add constraint FK_SKETCH_REFERENCE_ACCOUNT foreign key (AccountId)
+      references Account (AccountId)
       on delete restrict on update restrict;
 
 alter table Sketch

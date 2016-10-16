@@ -16,6 +16,12 @@ import java.util.Objects;
 public class Genre implements Serializable {
 
     /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = -6306566153092664988L;
+
+
+    /**
      * Unique id.
      * */
     @Id

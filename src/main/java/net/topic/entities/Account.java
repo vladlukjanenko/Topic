@@ -9,11 +9,17 @@ import java.util.Objects;
  * @author Vlad Lukjanenko.
  */
 @Entity
-@Table(name = "User")
+@Table(name = "Account")
 @NamedQueries({
 
 })
-public class User implements Serializable {
+public class Account implements Serializable {
+
+    /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = -2387791672552944370L;
+
 
     /**
      * Unique id.
@@ -21,28 +27,28 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column
-    private long userId;
+    private long accountId;
 
     /**
-     * User name.
+     * Account name.
      * */
     @Column
     private String userName;
 
     /**
-     * User gender.
+     * Account gender.
      * */
     @Column(name = "UserGender")
     private String gender;
 
     /**
-     * User email.
+     * Account email.
      * */
     @Column(name = "UserEmail")
     private String email;
 
     /**
-     * User photo.
+     * Account photo.
      * */
     @Column(name = "UserPhoto")
     private String photo;
@@ -56,36 +62,36 @@ public class User implements Serializable {
     /**
      * One to many relationship mapping.
      * */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
     private List<Shelf> shelves;
 
     /**
      * One to many relationship mapping.
      * */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
     private List<Sketch> sketches;
 
     /**
      * One to many relationship mapping.
      * */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
     private List<Role> roles;
 
 
     /**
      * Default constructor.
      * */
-    public User() {
+    public Account() {
 
     }
 
 
-    public long getUserId() {
-        return userId;
+    public long getAccountId() {
+        return accountId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
     }
 
     public String getUserName() {
@@ -160,13 +166,13 @@ public class User implements Serializable {
             return true;
         }
 
-        if (!(o instanceof User)) {
+        if (!(o instanceof Account)) {
             return false;
         }
 
-        User user = (User) o;
+        Account user = (Account) o;
 
-        if (userId != user.userId) {
+        if (accountId != user.accountId) {
             return false;
         }
 
@@ -196,13 +202,13 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.userId, this.userName);
+        return Objects.hash(this.accountId, this.userName);
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
+        return "Account{" +
+                "accountId=" + accountId +
                 ", userName='" + userName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +

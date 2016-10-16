@@ -15,6 +15,12 @@ import java.util.Objects;
 public class AuthorBook implements Serializable {
 
     /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = 3570757799528394290L;
+
+
+    /**
      * Author id.
      * */
     @Id

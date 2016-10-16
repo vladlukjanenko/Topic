@@ -15,6 +15,12 @@ import java.util.Objects;
 public class BookGenre implements Serializable {
 
     /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = 3675183887399485127L;
+
+
+    /**
      * Genre id.
      * */
     @Id

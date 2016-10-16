@@ -42,6 +42,7 @@ public class PersistenceConfig {
         flyway.setEncoding(flywayConfig.getEncoding());
         flyway.setLocations(flywayConfig.getLocations());
         flyway.setTable(flywayConfig.getTable());
+        flyway.setLocations("migrations");
 
         return flyway;
     }

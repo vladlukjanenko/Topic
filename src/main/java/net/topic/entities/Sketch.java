@@ -14,16 +14,24 @@ import java.io.Serializable;
 public class Sketch implements Serializable {
 
     /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = -9165189556263296192L;
+
+
+    /**
      * Unique id.
      * */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long sketchId;
 
     /**
      * Many to one relationship mapping.
      * */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserId")
-    private User user;
+    @JoinColumn(name = "AccountId")
+    private Account account;
 
     /**
      * Many to one relationship mapping.
@@ -49,12 +57,12 @@ public class Sketch implements Serializable {
         this.sketchId = sketchId;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Genre getGenre() {

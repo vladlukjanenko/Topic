@@ -15,6 +15,12 @@ import java.util.Objects;
 public class PersistentLogin implements Serializable {
 
     /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = 1259907112738282305L;
+
+
+    /**
      * Unique id.
      * */
     @Id

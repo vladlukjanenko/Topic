@@ -15,6 +15,12 @@ import java.util.Objects;
 public class Shelf implements Serializable {
 
     /**
+     * Serial version id.
+     * */
+    private static final long serialVersionUID = -5791125864666795196L;
+
+
+    /**
      * Unique id.
      * */
     @Id
@@ -36,11 +42,11 @@ public class Shelf implements Serializable {
     private Book book;
 
     /**
-     * Many to one relationship mapping: Shelf - User.
+     * Many to one relationship mapping: Shelf - Account.
      * */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserId")
-    private User user;
+    @JoinColumn(name = "AccountId")
+    private Account account;
 
 
     /**
@@ -75,14 +81,13 @@ public class Shelf implements Serializable {
         this.book = book;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccount(Account account) {
+        this.account = account;
     }
-
 
     @Override
     public boolean equals(Object o) {
