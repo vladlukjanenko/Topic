@@ -1,5 +1,5 @@
 {
   "encoding": "UTF-8",
-  "locations": "migrations/postgres",
+  "locations": "migrations/h2",
   "table": "flyway-topic"
 }

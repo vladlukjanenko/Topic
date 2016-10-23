@@ -2,10 +2,13 @@ package net.topic.config;
 
 import net.topic.util.config.DatabaseConfig;
 import net.topic.util.config.FlywayConfig;
+import net.topic.util.db.DbUtils;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
+import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.PostgreSQL95Dialect;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -24,6 +27,7 @@ import javax.sql.DataSource;
  * @author Vlad Lukjanenko.
  */
 @Configuration
+@ComponentScan(basePackages = "net.topic.services")
 public class PersistenceConfig {
 
     /**
@@ -42,7 +46,7 @@ public class PersistenceConfig {
         flyway.setEncoding(flywayConfig.getEncoding());
         flyway.setLocations(flywayConfig.getLocations());
         flyway.setTable(flywayConfig.getTable());
-        flyway.setLocations("migrations");
+        flyway.setLocations(flywayConfig.getLocations());
 
         return flyway;
     }
@@ -74,11 +78,15 @@ public class PersistenceConfig {
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
 
+        DatabaseConfig dbConfig = DatabaseConfig.getInstance();
+        Database database = DbUtils.getDatabase(dbConfig.getDriverClassName());
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        jpaVendorAdapter.setDatabase(Database.POSTGRESQL);
+        Class dialect = DbUtils.getHibernateDialect(database);
+
+        jpaVendorAdapter.setDatabase(database);
         jpaVendorAdapter.setShowSql(true);
         jpaVendorAdapter.setGenerateDdl(true);
-        jpaVendorAdapter.setDatabasePlatform(PostgreSQL95Dialect.class.getName());
+        jpaVendorAdapter.setDatabasePlatform(dialect.getName());
 
         return jpaVendorAdapter;
     }

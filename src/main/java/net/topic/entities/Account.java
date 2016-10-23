@@ -11,9 +11,27 @@ import java.util.Objects;
 @Entity
 @Table(name = "Account")
 @NamedQueries({
-
+        @NamedQuery(
+                name = Account.FIND_ALL_QUERY,
+                query = "select a from Account a"
+        ),
+        @NamedQuery(
+                name = Account.COUNT_QUERY,
+                query = "select count(a.accountId) from Account a"
+        )
 })
 public class Account implements Serializable {
+
+    /**
+     * Find all entities.
+     * */
+    public static final String FIND_ALL_QUERY = "Account.findAll";
+
+    /**
+     * Count all entities.
+     * */
+    public static final String COUNT_QUERY = "Account.count";
+
 
     /**
      * Serial version id.
