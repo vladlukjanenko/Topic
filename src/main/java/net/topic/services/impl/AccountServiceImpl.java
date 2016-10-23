@@ -4,6 +4,7 @@ import net.topic.entities.Account;
 import net.topic.services.AccountService;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +20,7 @@ import java.util.Optional;
  */
 @Service
 @Repository
+@Transactional
 public class AccountServiceImpl implements AccountService {
 
     @PersistenceContext
@@ -53,7 +55,7 @@ public class AccountServiceImpl implements AccountService {
             return false;
         }
 
-        entityManager.remove(entity);
+        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
 
         if (entityManager.contains(entity)) {
             return false;

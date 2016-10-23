@@ -1,6 +1,7 @@
 package net.topic.services;
 
 import net.topic.entities.Account;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
