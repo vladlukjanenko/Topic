@@ -1,6 +1,7 @@
 package net.topic.services;
 
 import net.topic.entities.Account;
+import net.topic.services.exceptions.AccountServiceException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,17 +14,17 @@ import java.util.Optional;
  */
 public interface AccountService extends BasicOperationsService<Account, Long> {
 
-    Optional<Account> create(Account entity);
+    Account create(Account entity) throws AccountServiceException;
 
-    Optional<Account> update(Account entity);
+    Account update(Account entity) throws AccountServiceException;
 
     boolean delete(Account entity);
 
-    boolean deleteById(Long id);
+    boolean deleteById(Long id) throws AccountServiceException;
 
     void deleteAll();
 
-    Optional<Account> find(Long id);
+    Account find(Long id) throws AccountServiceException;
 
     List<Account> findAll();
 

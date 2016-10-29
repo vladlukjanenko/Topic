@@ -1,6 +1,7 @@
 package net.topic.services;
 
 import net.topic.entities.Account;
+import net.topic.services.exceptions.AccountServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.fail;
 
 /**
  * Integration test for {@link AccountService}.
@@ -29,7 +31,13 @@ public class AccountServiceTest extends BasicTestConfig {
     public void testCreateAccount() {
 
         Account account = getAccount();
-        Account created = accountService.create(account).get();
+        Account created = null;
+
+        try {
+            created = accountService.create(account);
+        } catch (AccountServiceException e) {
+            fail();
+        }
 
         assertThat(created.getAccountId(), is(1L));
         assertThat(created.getEmail(), is(account.getEmail()));
@@ -41,11 +49,22 @@ public class AccountServiceTest extends BasicTestConfig {
     public void testUpdateAccount() {
 
         Account account = getAccount();
-        Account created = accountService.create(account).get();
+        Account created = null;
+        Account updated = null;
+
+        try {
+            created = accountService.create(account);
+        } catch (AccountServiceException e) {
+            fail();
+        }
 
         account.setUserName("NewTest");
 
-        Account updated = accountService.update(account).get();
+        try {
+            updated = accountService.update(account);
+        } catch (AccountServiceException e) {
+            fail();
+        }
 
         assertThat(updated.getAccountId(), is(created.getAccountId()));
         assertThat(updated.getEmail(), is(account.getEmail()));
@@ -57,8 +76,16 @@ public class AccountServiceTest extends BasicTestConfig {
     public void testDeleteAccount() {
 
         Account account = getAccount();
-        Account created = accountService.create(account).get();
-        boolean deleted = accountService.delete(created);
+        Account created = null;
+        boolean deleted = false;
+
+        try {
+            created = accountService.create(account);
+        } catch (AccountServiceException e) {
+            fail();
+        }
+
+        deleted = accountService.delete(created);
 
         assertThat(deleted, is(true));
     }
@@ -67,10 +94,14 @@ public class AccountServiceTest extends BasicTestConfig {
     public void testDeleteAccountById() {
 
         Account account = getAccount();
+        boolean deleted = false;
 
-        accountService.create(account);
-
-        boolean deleted = accountService.deleteById(1L);
+        try {
+            accountService.create(account);
+            deleted = accountService.deleteById(1L);
+        } catch (AccountServiceException e) {
+            fail();
+        }
 
         assertThat(deleted, is(true));
     }
@@ -79,8 +110,15 @@ public class AccountServiceTest extends BasicTestConfig {
     public void testFindAccountById() {
 
         Account account = getAccount();
-        Account created = accountService.create(account).get();
-        Account found = accountService.find(created.getAccountId()).get();
+        Account created = null;
+        Account found = null;
+
+        try {
+            created = accountService.create(account);
+            found = accountService.find(created.getAccountId());
+        } catch (AccountServiceException e) {
+            fail();
+        }
 
         assertThat(found.getAccountId(), is(created.getAccountId()));
         assertThat(found.getEmail(), is(account.getEmail()));
@@ -93,12 +131,18 @@ public class AccountServiceTest extends BasicTestConfig {
 
         Account account1 = getAccount();
         Account account2 = getAccount();
+        Account createdAccount1 = null;
+        Account createdAccount2 = null;
 
         account1.setUserName("Test1");
         account2.setUserName("Test2");
 
-        Account createdAccount1 = accountService.create(account1).get();
-        Account createdAccount2 = accountService.create(account2).get();
+        try {
+            createdAccount1 = accountService.create(account1);
+            createdAccount2 = accountService.create(account2);
+        } catch (AccountServiceException e) {
+            fail();
+        }
 
         List<Account> accounts = accountService.findAll();
 
@@ -116,8 +160,13 @@ public class AccountServiceTest extends BasicTestConfig {
         account1.setUserName("Test1");
         account2.setUserName("Test2");
 
-        accountService.create(account1);
-        accountService.create(account2);
+        try {
+            accountService.create(account1);
+            accountService.create(account2);
+        } catch (AccountServiceException e) {
+            fail();
+        }
+
         accountService.deleteAll();
 
         int size = accountService.findAll().size();

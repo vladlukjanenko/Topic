@@ -1,8 +1,9 @@
 package net.topic.services;
 
+import net.topic.services.exceptions.ServiceException;
+
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Represents basic operation on entities.
@@ -15,17 +16,17 @@ public interface BasicOperationsService<T, I extends Serializable> {
      * Creates object into database.
      *
      * @param entity    object to create in database.
-     * @return  saved objects as instance  of {@link Optional}.
+     * @return  saved objects as instance  of T.
      * */
-    Optional<T> create(T entity);
+    T create(T entity) throws ServiceException;
 
     /**
      * Update existing object in database.
      *
      * @param entity    existing object to update in database.
-     * @return  saved objects as instance  of {@link Optional}.
+     * @return  saved objects as instance  of T.
      * */
-    Optional<T> update(T entity);
+    T update(T entity) throws ServiceException;
 
     /**
      * Removes entity from database.
@@ -41,7 +42,7 @@ public interface BasicOperationsService<T, I extends Serializable> {
      * @param id    id of object to remove from database.
      * @return  true if object has been deleted.
      * */
-    boolean deleteById(I id);
+    boolean deleteById(I id) throws ServiceException;
 
     /**
      * Removes all entities from database.
@@ -52,14 +53,14 @@ public interface BasicOperationsService<T, I extends Serializable> {
      * Gets entity from database by specified id.
      *
      * @param id    entity unique id.
-     * @return  found object as instance of {@link Optional}.
+     * @return  found object as instance of T.
      * */
-    Optional<T> find(I id);
+    T find(I id) throws ServiceException;
 
     /**
      * Gets all entities from database.
      *
-     * @return  list of {@link T}.
+     * @return  list of  T.
      * */
     List<T> findAll();
 

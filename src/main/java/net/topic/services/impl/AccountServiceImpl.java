@@ -2,6 +2,7 @@ package net.topic.services.impl;
 
 import net.topic.entities.Account;
 import net.topic.services.AccountService;
+import net.topic.services.exceptions.AccountServiceException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,30 +27,31 @@ public class AccountServiceImpl implements AccountService {
     @PersistenceContext
     private EntityManager entityManager;
 
+
     @Override
-    public Optional<Account> create(Account entity) {
+    public Account create(Account entity) throws AccountServiceException {
 
         if (entity == null) {
-            return Optional.empty();
+            throw new AccountServiceException("Unable to create new account. Account is null");
         }
 
         entityManager.persist(entity);
 
-        return Optional.of(entity);
+        return entity;
     }
 
     @Override
-    public Optional<Account> update(Account entity) {
+    public Account update(Account entity) throws AccountServiceException {
 
         if (entity == null) {
-            return Optional.empty();
+            throw new AccountServiceException("Unable to update new account. Account is null");
         }
 
-        return Optional.ofNullable(entityManager.merge(entity));
+        return entityManager.merge(entity);
     }
 
     @Override
-    public boolean delete(Account entity) {
+    public boolean delete(Account entity){
 
         if (entity == null) {
             return false;
@@ -65,21 +67,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(Long id) throws AccountServiceException {
 
         if (id == null) {
             return false;
         }
 
-        Optional<Account> account = find(id);
+        Account account = find(id);
 
-        if (!account.isPresent()) {
-            return false;
-        }
+        entityManager.remove(account);
 
-        entityManager.remove(account.get());
-
-        if (entityManager.contains(account.get())) {
+        if (entityManager.contains(account)) {
             return false;
         }
 
@@ -92,15 +90,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Optional<Account> find(Long id) {
+    public Account find(Long id) throws AccountServiceException {
+
 
         Account account = entityManager.find(Account.class, id);
 
         if (account == null) {
-            return Optional.empty();
+            throw new AccountServiceException("Unable to get account by id=" + id);
         }
 
-        return Optional.of(account);
+        return account;
     }
 
     @Override
