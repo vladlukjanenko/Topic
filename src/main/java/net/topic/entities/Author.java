@@ -11,9 +11,28 @@ import java.util.Objects;
 @Entity
 @Table(name = "Author")
 @NamedQueries({
-
+        @NamedQuery(
+                name = Author.FIND_ALL_QUERY,
+                query = "select a from Author a"
+        ),
+        @NamedQuery(
+                name = Author.COUNT_QUERY,
+                query = "select count(a.authorId) from Author a"
+        )
 })
 public class Author implements Serializable {
+
+    /**
+     * Find all entities.
+     * */
+    public static final String FIND_ALL_QUERY = "Author.findAll";
+
+    /**
+     * Count all entities.
+     * */
+    public static final String COUNT_QUERY = "Author.count";
+
+
     /**
      * Serial version id.
      * */
@@ -24,6 +43,7 @@ public class Author implements Serializable {
      * Unique id.
      * */
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column
     private long authorId;
 
@@ -97,7 +117,7 @@ public class Author implements Serializable {
             return false;
         }
 
-        if (this.authorName != null ? this.authorName.equals(author.authorName) : author.authorName != null) {
+        if (this.authorName != null ? !this.authorName.equals(author.authorName) : author.authorName != null) {
             return false;
         }
 
