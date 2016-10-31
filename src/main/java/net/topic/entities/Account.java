@@ -210,7 +210,7 @@ public class Account implements Serializable {
             return false;
         }
 
-        if (photo != null ? photo.equals(user.photo) : user.photo != null) {
+        if (photo != null ? !photo.equals(user.photo) : user.photo != null) {
             return false;
         }
 

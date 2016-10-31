@@ -3,9 +3,7 @@ package net.topic.services;
 import net.topic.entities.Account;
 import net.topic.services.exceptions.AccountServiceException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
@@ -20,7 +18,6 @@ import static org.junit.Assert.fail;
  *
  * @author Vlad Lukjanenko.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 public class AccountServiceTest extends BasicTestConfig {
 
     @Autowired
@@ -39,7 +36,7 @@ public class AccountServiceTest extends BasicTestConfig {
             fail();
         }
 
-        assertThat(created.getAccountId(), is(1L));
+        assertThat(created.getAccountId(), is(not(0L)));
         assertThat(created.getEmail(), is(account.getEmail()));
         assertThat(created.getGender(), is(account.getGender()));
         assertThat(created.getUserName(), is(account.getUserName()));
@@ -94,11 +91,12 @@ public class AccountServiceTest extends BasicTestConfig {
     public void testDeleteAccountById() {
 
         Account account = getAccount();
+        Account created = null;
         boolean deleted = false;
 
         try {
-            accountService.create(account);
-            deleted = accountService.deleteById(1L);
+            created = accountService.create(account);
+            deleted = accountService.deleteById(created.getAccountId());
         } catch (AccountServiceException e) {
             fail();
         }

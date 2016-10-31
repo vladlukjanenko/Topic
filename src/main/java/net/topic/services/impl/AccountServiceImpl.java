@@ -59,11 +59,7 @@ public class AccountServiceImpl implements AccountService {
 
         entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
 
-        if (entityManager.contains(entity)) {
-            return false;
-        }
-
-        return true;
+        return !entityManager.contains(entity);
     }
 
     @Override
